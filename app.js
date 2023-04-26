@@ -3,27 +3,11 @@ import fs1 from "fs/promises";
 import { createWriteStream } from "fs";
 import PDFDocument from "pdfkit-table";
 import clc from "cli-color";
-import sendMail from "./mail.js";
-import { google } from "googleapis";
-import fs from "fs";
 import path from "path";
-import { createReadStream } from "fs";
 import { fileURLToPath } from "url";
-import twilio from "twilio";
-import config from "config";
-import c from "ansi-colors";
 
 const __filename = fileURLToPath(import.meta.url); //
 const __dirname = path.dirname(__filename); //
-const { TWILIO_SID, TWILIO_TOKEN, TWILIO_NUMBER } = config.get("SEND_SMS");
-const accountSid = TWILIO_SID;
-const authToken = TWILIO_TOKEN;
-
-const SCOPES = ["https://www.googleapis.com/auth/drive.file"];
-const FILE_PATH = "./document.pdf";
-const filePath = path.join(__dirname, "./cred.json");
-
-const client = new twilio(accountSid, authToken);
 
 let main = async () => {
   console.clear();
@@ -75,7 +59,6 @@ let main = async () => {
       student.push({
         name: "Abhinav Bhargava Reddy Edulakanti",
         email: "abhinav.edulakanti@gmail.com",
-        phone: "+919618211626",
       });
       break;
 
@@ -83,7 +66,6 @@ let main = async () => {
       student.push({
         name: "Adnan Mohammed Ahmed",
         email: "aa706002@gmail.com",
-        phone: "+919618211626",
       });
       break;
 
@@ -91,39 +73,33 @@ let main = async () => {
       student.push({
         name: "Hanzala",
         email: "sthka05@gmail.com",
-        phone: "+919618211626",
       });
       break;
     case 4:
       student.push({
         name: "Mohammed Junaid Khan",
         email: "mohammedjunaidkhan7@gmail.com",
-        phone: "+919618211626",
       });
       break;
     case 5:
       student.push({
         name: "Syed Saniaa",
         email: "syedsaniaa0a@gmail.com",
-        phone: "+919618211626",
       });
     case 6:
       student.push({
         name: "Thondapu Ritvik",
         email: "thondapuritvik@gmail.com",
-        phone: "+919618211626",
       });
     case 7:
       student.push({
         name: "Samuel Reuben",
         email: "samuel.reuben@gmail.com",
-        phone: "+919618211626",
       });
     case 8:
       student.push({
         name: "Yaseera Tabassum",
         email: "yaseeratabassum@gmail.com",
-        phone: "+919618211626",
       });
       break;
 
@@ -290,7 +266,8 @@ let main = async () => {
 
     console.log(
       pink(
-        `In ${askCourseCodes} ${askCourseName}\nCredits = ${askCredits}\nTotal = ${total}\nGrade = ${letterGrade1}\nGrade Points = ${c1}\nTotal Marks in This Course ${askCourseCodes} is ${askCredits} x ${c1} = ${askCredits * c1
+        `In ${askCourseCodes} ${askCourseName}\nCredits = ${askCredits}\nTotal = ${total}\nGrade = ${letterGrade1}\nGrade Points = ${c1}\nTotal Marks in This Course ${askCourseCodes} is ${askCredits} x ${c1} = ${
+          askCredits * c1
         } `
       )
     );
@@ -313,14 +290,6 @@ let main = async () => {
     database[0].remarks.push(remarks);
     c++;
   }
-  // let remarks = "Good";
-
-  // let impression = readline.question(
-  //   sky("Enter the Impression for the Student : ")
-  // );
-  // // let impression = "Pratice";
-
-  // database[0].impression.push(impression);
 
   let write = await fs1.writeFile("db.json", JSON.stringify(database));
 
@@ -499,31 +468,6 @@ let main = async () => {
     },
   });
 
-  // MGPA 224 / 38 = 5.89 CLASS RANK 3 REMAINING ATTEMPTS : 1
-  // doc
-  //   .font("./Oswald/Oswald-Bold.ttf")
-  //   .fontSize(20)
-  //   .fillColor("black")
-  //   .text(`MGPA ${mgpa}  REMAINING ATTEMPTS : ${database[0].reattempt}\n\n`, {
-  //     align: "center",
-  //   });
-  // doc
-  //   .font("./Oswald/Oswald-Bold.ttf")
-  //   .fontSize(20)
-  //   .fillColor("#0000FF")
-  //   .text(`MGPA : ${mgpa}`, { continued: true })
-  //   .fillColor("red")
-  //   .text(
-  //     ` ${finalmgpa.toFixed(
-  //       2
-  //     )}                                                `,
-  //     { continued: true }
-  //   )
-  //   .fillColor("#0000FF")
-
-  //   .text(` REMAINING ATTEMPTS : `, { continued: true })
-  //   .fillColor("red")
-  //   .text(`${database[0].reattempt}`);
   doc
     .font("./Oswald/Oswald-Bold.ttf")
     .fontSize(20)
@@ -689,7 +633,7 @@ let main = async () => {
     },
   });
 
-  // doc.addPage();
+  doc.addPage();
 
   ///////////////
 
@@ -943,12 +887,6 @@ let main = async () => {
       .text(`${i + 1}.${database[0].remarks[i]}`, { align: "left" });
   }
 
-  // doc
-  //   .font("./Oswald/Oswald-Medium.ttf")
-  //   .fontSize(14)
-  //   .fillColor("black")
-  //   .text(`Impression : ${stringToObject[0].impression}`, { align: "left" });
-
   doc
     .font("./Oswald/Oswald-Medium.ttf")
     .fontSize(20)
@@ -956,74 +894,6 @@ let main = async () => {
     .text(`THE END`, { align: "center" });
 
   doc.end();
-
-  // console.log(`EMAIL SENT To ${student[0].email}`);
-
-  // const jsonData = fs.readFileSync(filePath, "utf-8");
-  // const credentials = JSON.parse(jsonData);
-
-  // const auth = new google.auth.GoogleAuth({
-  //   credentials,
-  //   scopes: SCOPES,
-  // });
-
-  // const drive = google.drive({ version: "v3", auth });
-
-  // const fileMetadata = {
-  //   name: "MGPA Report",
-  //   mimeType: "application/pdf",
-  // };
-  // const media = {
-  //   mimeType: "application/pdf",
-  //   body: createReadStream(FILE_PATH),
-  // };
-  // let data = await drive.files.create({
-  //   resource: fileMetadata,
-  //   media: media,
-  //   fields: "id",
-  // });
-
-  // let fileId = data.data.id;
-
-  // let link = await drive.files.get({
-  //   fileId,
-  //   fields: "webViewLink",
-  // });
-  // const permission = {
-  //   type: "user",
-  //   role: "reader",
-  //   emailAddress: `${student[0].email}`,
-  // };
-
-  // let access = await drive.permissions.create({
-  //   fileId: fileId,
-  //   requestBody: permission,
-  //   sendNotificationEmail: true, // Optional parameter to disable email notification
-  // });
-
-  // // console.log(link.data.webViewLink);
-
-  // let url = link.data.webViewLink;
-
-  // await sendMail({
-  //   subject: `CS.CODE.IN MGPA MAT-${title} Report`,
-  //   to: `${student[0].email}`,
-  //   body: `${stringToObject[0].name} MAT-${title} Report`,
-  // });
-
-  // await sendMail({
-  //   subject: "CS.CODE.IN MGPA Report",
-  //   to: `prashanth@code.in`,
-  //   body: `${stringToObject[0].name} ${stringToObject[0].matNo} Report`,
-  // });
-
-  // await client.messages.create({
-  //   body: `From CS.CODE.IN\nYour MGPA Report : ${url}`,
-  //   to: `${student[0].phone}`,
-  //   from: TWILIO_NUMBER,
-  // });
-
-  // console.log(`SMS SENT To User ${student[0].name} on ${student[0].phone}`);
 };
 
 main();
