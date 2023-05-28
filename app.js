@@ -16,13 +16,10 @@ let main = async () => {
   let yellow = clc.yellow;
   let pink = clc.xterm(13);
   let sky = clc.xterm(14);
-  let orange = clc.xterm(202);
   console.log("\n");
-
   console.log(yellow("++++++++++++++++++++++++++++++++++++++"));
   console.log(green("\tCS.CODE.IN-PDF-GENERATOR"));
   console.log(yellow("++++++++++++++++++++++++++++++++++++\n"));
-
   let students = [
     "For Exit",
     "For Abhinav Bhargava Reddy Edulakanti",
@@ -35,20 +32,25 @@ let main = async () => {
     "For Yaseera Tabassum\n",
   ];
   let student = [];
-
   students.map((value, index) => {
     console.log(red(`${index}. ${sky(value)}`));
   });
 
-  // let option = 1;
   let option = readline.questionInt("Select The Student : ");
 
   if (option == 0) {
     return console.log(green("Thanks For Using App"));
   }
-  // let title = 4;
-  let title = readline.question(pink("\nEnter the MAT Number Ex : 1,2,3 : "));
 
+  if (option > 8 || option < 0) {
+    return console.log(red("Invalid Input"));
+  }
+  let matNumber = readline.questionInt(
+    pink("\nEnter the MAT Number Ex : 1,2,3 : ")
+  );
+  if (matNumber <= 0 || matNumber >= 13) {
+    return console.log("Invalid Mat Number");
+  }
   switch (option) {
     case 0:
       if (option == 0) {
@@ -107,201 +109,216 @@ let main = async () => {
       console.log("Thank You For Using App");
       break;
   }
-
   console.log(sky("\nYou Have Selected The Student\n"));
   console.log(
-    green(`Name : ${student[0].name}\nEmail : ${student[0].email}\n`)
+    green(
+      `Name : ${student[0].name}\nEmail : ${student[0].email} ${yellow(
+        `For MAT-${matNumber}`
+      )}`
+    )
   );
 
-  let count = readline.questionInt(
-    sky(`${student[0].name} No. Reattempt's Left Ex : 1,0  : `)
+  // console.log(student);
+
+  let numberOfCourses = readline.questionInt(
+    pink(`\nEnter the Number of Courses in MAT-${matNumber} Ex: 1,2,3 : `)
   );
-
-  // let courseCount = 2;
-
-  let courseCount = readline.questionInt(
-    pink(`\nEnter the Number of Courses in MAT-${title} Ex: 1,2,3 : `)
-  );
-
-  let courseCodes = [];
+  if (numberOfCourses <= 0) {
+    return console.log(pink("Invalid Number of Courses"));
+  }
+  let inputCourseCodes, inputCourseNames, inputCourseCredits;
   let database = [];
   database[0] = {};
   database[0].name = student[0].name;
   database[0].email = student[0].email;
-  database[0].phone = student[0].phone;
-  database[0].matNo = `${title}`;
+  database[0].matNumber = matNumber;
+  database[0].numberOfCourses = numberOfCourses;
   database[0].courseCodes = [];
-  database[0].courseName = [];
-  database[0].credits = [];
-  database[0].course = [];
-  database[0].finalCode = [];
-  database[0].finalInt = [];
-  database[0].tempGrades = [];
-  database[0].tempTotals = [];
+  database[0].courseNames = [];
+  database[0].courseCredits = [];
+  database[0].allLabMarksData = [];
+  database[0].totalLabMarks = [];
+  database[0].finalLabTotal = [];
+  database[0].finalInterview = [];
+  database[0].grades = [];
+  database[0].totalSum = [];
+  database[0].gradeNumber = [];
+  database[0].labs = [];
+
+  database[0].gradePoints = [];
+  database[0].total = [];
   database[0].remarks = [];
-  database[0].impression = [];
-  database[0].tempMarks = [];
-  database[0].courseLabs = [];
-  database[0].courseLabs[0] = {};
-  database[0].reattempt = count;
 
-  let i = 0;
-  let askCourseCodes;
-  let askCourseName;
-  let askCredits;
-  let course, finalCode, finalInt;
+  let zero = 0;
 
-  while (i <= courseCount - 1) {
-    // askCourseCodes = "CS001";
+  let inputFinalLabTotal, inputFinalInterview;
 
-    askCourseCodes = readline.question(
-      green(`\n${i + 1}.Enter the Course Code Ex: CS001 : `)
+  while (zero <= numberOfCourses - 1) {
+    inputCourseCodes = readline.question(
+      green(`\n${zero + 1}.Enter the Course Code Ex: CS001 : `)
     );
 
-    // askCourseName = "ALGORITHMS AND ANALYSIS OF ALGORITHMS";
-
-    askCourseName = readline.question(
+    inputCourseNames = readline.question(
       green(
-        `\nEnter the Course Name for ${askCourseCodes}`,
+        `\nEnter the Course Name for ${inputCourseCodes}`,
         red(`Ex : PROGRAMMING IN C LANGUAGE : `)
       )
     );
 
-    // askCredits = 2;
-    askCredits = readline.questionInt(
-      green(`\nEnter The Credits for ${askCourseName}`, red(`Ex : 2,4,8 : `))
+    inputCourseCredits = readline.questionInt(
+      green(`\nEnter The Credits for ${inputCourseNames}`, red(`Ex : 2,4,8 : `))
     );
 
-    // course = "10,10,10,10";
+    let allLabMarks;
+    for (let i = 1; i < 5; i++) {
+      allLabMarks = readline.questionInt(
+        yellow(`\nEnter the Marks of Lab${i} : ${red(`Ex : 8 : `)}`)
+      );
 
-    course = readline.question(
-      yellow(
-        `\nEnter the Marks of Lab1, Lab2, Lab3, Lab4 : ${red(
-          `Ex : 10,9,7,7 : `
-        )}`
-      )
-    );
-
-    // finalCode = "10,10,10";
-
-    finalCode = readline.question(
-      yellow(
-        `Enter the Marks of FINAL CODE IMPLEMENTATION SCORES ${red(
-          `Ex : 10,9,7 : `
-        )}`
-      )
-    );
-
-    // finalInt = "10,8,7";
-
-    finalInt = readline.question(
-      yellow(
-        `Enter the Marks of FINAL INTERVIEW SCORES : ${red(`Ex : 10,9,7 : `)}`
-      )
-    );
-
-    database[0].courseCodes.push(askCourseCodes);
-    database[0].courseName.push(askCourseName);
-    database[0].credits.push(askCredits);
-    database[0].course.push(course);
-    database[0].finalCode.push(finalCode);
-    database[0].finalInt.push(finalInt);
-    let sum0, sum1, sum2;
-
-    ///////////////////////////////////////////
-
-    let courseNumber = database[0].course;
-
-    let flattenedArr0 = courseNumber.flatMap((str) =>
-      str.split(",").map(Number)
-    );
-    let j;
-    for (j = 0; j <= flattenedArr0.length - 1; j += 4) {
-      sum0 = flattenedArr0.slice(j, j + 4).reduce((acc, curr) => acc + curr, 0);
+      database[0].allLabMarksData.push(allLabMarks);
     }
 
-    ///////////////////////////////////////////
+    let sum;
 
-    let codeNumber = database[0].finalCode;
-    let k;
-    let flattenedArr1 = codeNumber.flatMap((str) => str.split(",").map(Number));
-    for (k = 0; k <= flattenedArr1.length - 1; k += 3) {
-      sum1 = flattenedArr1.slice(k, k + 3).reduce((acc, curr) => acc + curr, 0);
+    for (let i = 0; i <= database[0].allLabMarksData.length - 4; i += 4) {
+      const subarray = database[0].allLabMarksData.slice(i, i + 4);
+      sum = subarray.reduce(
+        (accumulator, currentValue) => accumulator + currentValue,
+        0
+      );
     }
-    ///////////////////////////////////////////
+    database[0].totalLabMarks.push(sum);
 
-    let intNumber = database[0].finalInt;
-
-    let flattenedArr2 = intNumber.flatMap((str) => str.split(",").map(Number));
-    let l;
-    for (l = 0; l <= flattenedArr2.length - 1; l += 3) {
-      sum2 = flattenedArr2.slice(l, l + 3).reduce((acc, curr) => acc + curr, 0);
-    }
-
-    let total = sum0 + sum1 + sum2;
-
-    let letterGrade1;
-
-    if (total >= 90) {
-      letterGrade1 = "O,10";
-    } else if (total >= 80 && total < 90) {
-      letterGrade1 = "A+,9";
-    } else if (total >= 70 && total < 80) {
-      letterGrade1 = "A,8";
-    } else if (total >= 60 && total < 70) {
-      letterGrade1 = "B+,7";
-    } else if (total >= 50 && total < 60) {
-      letterGrade1 = "B,6";
-    } else if (total >= 40 && total < 50) {
-      letterGrade1 = "C,5";
-    } else if (total < 40) {
-      letterGrade1 = "F,0";
-    } else {
-      letterGrade1 = "AB,0";
-    }
-    let splits1 = letterGrade1.split(",");
-
-    letterGrade1 = splits1[0];
-    let c1 = +splits1[1];
-
-    console.log(
-      pink(
-        `In ${askCourseCodes} ${askCourseName}\nCredits = ${askCredits}\nTotal = ${total}\nGrade = ${letterGrade1}\nGrade Points = ${c1}\nTotal Marks in This Course ${askCourseCodes} is ${askCredits} x ${c1} = ${
-          askCredits * c1
-        } `
-      )
-    );
     console.log("\n");
-    database[0].tempGrades.push(letterGrade1);
-    database[0].tempTotals.push(c1);
-    database[0].tempMarks.push(askCredits * c1);
 
-    i++;
+    inputFinalLabTotal = readline.question(
+      yellow(
+        `Enter the Marks of FINAL CODE IMPLEMENTATION SCORES  IN TOTAL ${red(
+          `Ex : 28  : `
+        )}`
+      )
+    );
+
+    console.log("\n");
+
+    inputFinalInterview = readline.question(
+      yellow(
+        `Enter the Marks of FINAL INTERVIEW SCORES IN TOTAL :  ${red(
+          `Ex : 29 : `
+        )}`
+      )
+    );
+
+    database[0].courseCodes.push(inputCourseCodes.toUpperCase());
+    database[0].courseNames.push(inputCourseNames.toUpperCase());
+    database[0].courseCredits.push(inputCourseCredits);
+    database[0].finalLabTotal.push(inputFinalLabTotal);
+    database[0].finalInterview.push(inputFinalInterview);
+
+    let letterGrade;
+    let gradeNumber;
+
+    // Determine the maximum length among the three arrays
+    const maxLength = Math.max(
+      database[0].totalLabMarks.length,
+      database[0].finalLabTotal.length,
+      database[0].finalInterview.length
+    );
+
+    // Initialize an array to store the horizontal sums
+    const horizontalSums = [];
+
+    // Iterate over the arrays and calculate the horizontal sum at each index
+    for (let i = 0; i < maxLength; i++) {
+      const sum =
+        (database[0].totalLabMarks[i] || 0) +
+        (parseInt(database[0].finalLabTotal[i]) || 0) +
+        (parseInt(database[0].finalInterview[i]) || 0);
+      horizontalSums.push(sum);
+    }
+
+    database[0].total = horizontalSums;
+
+    for (let i = 0; i <= database[0].total.length - 1; i++) {
+      if (database[0].total[i] >= 90) {
+        letterGrade = "O,10";
+      } else if (database[0].total[i] >= 80 && database[0].total[i] < 90) {
+        letterGrade = "A+,9";
+      } else if (database[0].total[i] >= 70 && database[0].total[i] < 80) {
+        letterGrade = "A,8";
+      } else if (database[0].total[i] >= 60 && database[0].total[i] < 70) {
+        letterGrade = "B+,7";
+      } else if (database[0].total[i] >= 80 && database[0].total[i] < 60) {
+        letterGrade = "B,6";
+      } else if (database[0].total[i] >= 40 && database[0].total[i] < 80) {
+        letterGrade = "C,5";
+      } else if (database[0].total[i] < 40) {
+        letterGrade = "F,0";
+      } else {
+        letterGrade = "AB,0";
+      }
+
+      let divide = letterGrade.split(",");
+
+      // console.log(divide, "DIVIDE");
+
+      letterGrade = divide[0];
+
+      // console.log(letterGrade, "LETTER");
+
+      gradeNumber = +divide[1];
+
+      // console.log(gradeNumber, "GRADENUMBER");
+    }
+    database[0].grades.push(letterGrade);
+    database[0].gradeNumber.push(gradeNumber);
+    database[0].gradePoints.push(inputCourseCredits * gradeNumber);
+    // console.log(
+    //     pink(
+    //         `In ${inputCourseCodes} ${inputCourseNames}\nCredits = ${inputCourseCredits}\nTotal = ${database[0].total[i]}\nGrade = ${letterGrade}\nGrade Points = ${gradeNumber}\nTotal Marks in This Course ${inputCourseCodes} is ${inputCourseCredits} x ${gradeNumber} = ${inputCourseCredits * gradeNumber} `
+    //     )
+    // );
+    // console.log("\n");
+
+    zero++;
   }
 
-  let storeRemarks = readline.questionInt(sky(`Number of Lines For Remarks :`));
+  let inputRemarks = readline.questionInt(sky(`Number of Lines For Remarks :`));
 
-  let c = 1;
+  let count = 1;
 
-  while (c <= storeRemarks) {
+  while (count <= inputRemarks) {
     let remarks = readline.question(
       sky("Enter the Remarks for the Student : ")
     );
     database[0].remarks.push(remarks);
-    c++;
+    count++;
   }
+
+  const newArray = [];
+
+  for (let i = 0; i < database[0].allLabMarksData.length; i += 4) {
+    const subArray = database[0].allLabMarksData.slice(i, i + 4);
+    const joinedString = subArray.join(",");
+    newArray.push(joinedString);
+  }
+
+  // console.log(newArray);
+
+  let flatt = newArray.flat();
+
+  database[0].labs = newArray;
 
   let write = await fs1.writeFile("db.json", JSON.stringify(database));
 
   let read = await fs1.readFile("db.json", "utf-8");
   let stringToObject = JSON.parse(read);
-  // console.log(database);
 
   // Initlaizise the Document
   let doc = new PDFDocument({
     margins: {
-      top: 50,
-      bottom: 50,
+      top: 40,
+      bottom: 80,
       left: 50,
       right: 50,
     },
@@ -318,7 +335,13 @@ let main = async () => {
     .text("CS.CODE.IN", { align: "left" });
   doc
     .font("./Oswald/Oswald-Bold.ttf")
-    .fontSize(22)
+    .fontSize(12)
+    .fillColor("#0000FF")
+    .text("\n", { align: "left" });
+
+  doc
+    .font("./Oswald/Oswald-Bold.ttf")
+    .fontSize(24)
     .fillColor("black")
     .text(
       "COMPUTER SCIENCE BOOTCAMP - FULL STACK WEB ENGINEERING - CLASS OF CS 2022",
@@ -330,7 +353,8 @@ let main = async () => {
   // set the fill color for the rectangle
   doc.fillColor("#2C2CDC");
   // draw the rectangle with the specified dimensions
-  doc.rect(50, 170, 900, 15);
+  doc.rect(50, 185, 900, 13);
+  //           down
   // fill the rectangle with the specified color
   doc.fill();
 
@@ -340,9 +364,12 @@ let main = async () => {
     .font("./Oswald/Oswald-Bold.ttf")
     .fontSize(25)
     .fillColor("#0000FF")
-    .text(`\nMAT ${database[0].matNo} (M${database[0].matNo}) - MGPA REPORT`, {
-      align: "center",
-    });
+    .text(
+      `\nMAT ${database[0].matNumber} (M${database[0].matNumber}) - MGPA REPORT`,
+      {
+        align: "center",
+      }
+    );
 
   doc
     .font("./Oswald/Oswald-Bold.ttf")
@@ -356,20 +383,23 @@ let main = async () => {
     .font("./Oswald/Oswald-Bold.ttf")
     .fontSize(10)
     .fillColor("#FFFFFF")
-    .text(`e`, {
+    .text(`OODF`, {
       align: "center",
     });
 
-  let totalCredits = database[0].credits.reduce((acc, crr) => acc + crr, 0);
-  let totalMarks = database[0].tempMarks.reduce((acc, crr) => acc + crr, 0);
+  let totalCredits = database[0].courseCredits.reduce(
+    (acc, crr) => acc + crr,
+    0
+  );
+
+  let totalMarks = database[0].gradePoints.reduce((acc, crr) => acc + crr, 0);
 
   let mgpa = `${totalMarks} / ${totalCredits} = `;
+
   let finalmgpa = totalMarks / totalCredits;
+
   let table;
   table = {
-    // title: `${database[0].matNo}`,
-    // subtitle: database[0].name.toUpperCase(),
-    // ROWS
     headers: [
       {
         label: "COURSE CODE",
@@ -387,7 +417,7 @@ let main = async () => {
         align: "left",
         headerColor: "#0000FF",
         headerOpacity: "2",
-        width: 250,
+        width: 280,
         renderer: null,
       },
       {
@@ -423,7 +453,7 @@ let main = async () => {
         align: "center",
         headerOpacity: "2",
         property: "price4",
-        width: 250,
+        width: 220,
         renderer: (value, indexColumn, indexRow, row) => {
           return `${value}`;
         },
@@ -434,18 +464,19 @@ let main = async () => {
 
     rows: [[]],
   };
-  // Table Generation
 
   let addData = table.rows;
 
-  for (let i = 0; i <= database[0].course.length - 1; i++) {
+  for (let i = 0; i <= stringToObject[0].courseCodes.length - 1; i++) {
     addData[i] = [
       `${stringToObject[0].courseCodes[i]}`,
-      `${stringToObject[0].courseName[i]}`,
-      `${stringToObject[0].credits[i]}`,
-      `${stringToObject[0].tempGrades[i]}`,
-      `${stringToObject[0].tempTotals[i]}`,
-      `${stringToObject[0].credits[i] * stringToObject[0].tempTotals[i]}`,
+      `${stringToObject[0].courseNames[i]}`,
+      `${stringToObject[0].courseCredits[i]}`,
+      `${stringToObject[0].grades[i]}`,
+      `${stringToObject[0].gradeNumber[i]}`,
+      `${
+        stringToObject[0].courseCredits[i] * stringToObject[0].gradeNumber[i]
+      }`,
     ];
   }
 
@@ -480,11 +511,8 @@ let main = async () => {
         4
       )}                                                                                       `,
       { continued: true, align: "left" }
-    )
-    .fillColor("#0000FF")
-    .text(`REMAINING ATTEMPTS : `, { continued: true })
-    .fillColor("red")
-    .text(`${count}\n`, { continued: true });
+    );
+
   doc.addPage();
 
   // Table 1
@@ -495,14 +523,19 @@ let main = async () => {
     .font("./Oswald/Oswald-Bold.ttf")
     .fontSize(20)
     .fillColor("#0000FF")
-    .text(`           PART 1 / 3 : INTERNAL CODING LAB SCORES\n\n`, {
+    .text(`\nMAT-${matNumber} (M${matNumber}) - MARKS REPORT\n`, {
+      align: "center",
+    });
+
+  doc
+    .font("./Oswald/Oswald-Bold.ttf")
+    .fontSize(10)
+    .fillColor("#FFFFFF")
+    .text(`OODF`, {
       align: "center",
     });
 
   const table1 = {
-    // title: "INTERNAL CODING LAB SCORES",
-
-    // ROWS
     headers: [
       {
         label: "COURSE CODE",
@@ -510,7 +543,7 @@ let main = async () => {
         headerColor: "#0000FF",
         headerOpacity: "2",
         property: "name",
-        width: 80,
+        width: 100,
         renderer: null,
       },
 
@@ -524,56 +557,76 @@ let main = async () => {
         renderer: null,
       },
       {
-        label: "LAB 001",
+        label: "LAB001\nSCORE",
         headerColor: "#0000FF",
         align: "center",
         headerOpacity: "2",
         property: "price2",
-        width: 100,
+        width: 80,
         renderer: null,
       },
       {
-        label: "LAB 002",
+        label: "LAB002\nSCORE",
         headerColor: "#0000FF",
         align: "center",
         headerOpacity: "2",
         property: "price3",
-        width: 100,
+        width: 80,
         renderer: null,
       },
       {
-        label: "LAB 003",
+        label: "LAB003\nSCORE",
         property: "price3",
         align: "center",
         headerColor: "#0000FF",
         headerOpacity: "2",
-        width: 100,
+        width: 80,
         renderer: null,
       },
       {
-        label: "LAB 004",
+        label: "LAB004\nSCORE",
         property: "price3",
         align: "center",
         headerColor: "#0000FF",
         headerOpacity: "2",
-        width: 100,
+        width: 80,
         renderer: null,
       },
+
       {
-        label: `MAT ${database[0].matNo} INTERNALS TOTAL`,
-        property: "price4",
+        label: `MAT-${matNumber} FINAL LAB TOTAL`,
+        property: "price3",
         align: "center",
         headerColor: "#0000FF",
         headerOpacity: "2",
-        width: 150,
+        width: 80,
         renderer: (value, indexColumn, indexRow, row) => {
           return `${value}`;
         },
+      },
+      {
+        label: `MAT-${matNumber} FINAL INTERVIEW`,
+        property: "price3",
+        align: "center",
+        headerColor: "#0000FF",
+        headerOpacity: "2",
+        width: 80,
+        renderer: null,
+      },
+      {
+        label: "TOTAL",
+        property: "price3",
+        align: "center",
+        headerColor: "#0000FF",
+        headerOpacity: "2",
+        width: 80,
+        renderer: null,
       },
     ],
 
     rows: [[]],
   };
+
   let addData1 = table1.rows;
   let t11 = [];
   let t1Data = [];
@@ -582,37 +635,66 @@ let main = async () => {
   let t21 = [];
   let t31 = [];
 
-  for (let i = 0; i <= database[0].course.length - 1; i++) {
-    t11 = [stringToObject[0].course[i]]; // 1 1
+  for (let i = 0; i <= stringToObject[0].labs.length - 1; i++) {
+    t11 = [stringToObject[0].labs[i]]; // 1 1
     t1Data.push(t11);
   }
-  for (let i = 0; i <= database[0].course.length - 1; i++) {
-    t21 = [stringToObject[0].finalCode[i]];
-    t2Data.push(t21);
-  }
-  for (let i = 0; i <= database[0].course.length - 1; i++) {
-    t31 = [stringToObject[0].finalInt[i]];
-    t3Data.push(t31);
-  }
-  let p1, p2, p3;
 
-  for (let i = 0; i <= database[0].course.length - 1; i++) {
+  let p1;
+
+  // Final Interview
+
+  let fi = [];
+  const finalInterviewValues = stringToObject[0].finalInterview;
+
+  for (let i = 0; i < finalInterviewValues.length; i++) {
+    const value = Number(finalInterviewValues[i]);
+    fi.push(value);
+  }
+
+  /////
+  // -------------------------------------------------------
+  ///
+
+  // Final Lab
+
+  let fl = [];
+
+  const finalLabValues = stringToObject[0].finalLabTotal;
+
+  for (let i = 0; i < finalLabValues.length; i++) {
+    const value = Number(finalLabValues[i]);
+    fl.push(value);
+  }
+
+  for (let i = 0; i <= stringToObject[0].numberOfCourses - 1; i++) {
     p1 = t1Data[i].flat();
-    p2 = t2Data[i].flat();
-    p3 = t3Data[i].flat();
 
     addData1[i] = [
-      `${stringToObject[0].courseCodes[i]}`,
-      `${stringToObject[0].courseName[i]}`,
+      stringToObject[0].courseCodes[i],
+      stringToObject[0].courseNames[i],
       `${p1.flatMap((str) => str.split(",").map(Number)[0])}`,
       `${p1.flatMap((str) => str.split(",").map(Number)[1])}`,
       `${p1.flatMap((str) => str.split(",").map(Number)[2])}`,
       `${p1.flatMap((str) => str.split(",").map(Number)[3])}`,
-      `${t1Data[i]
-        .flatMap((str) => str.split(",").map(Number))
-        .reduce((acc, curr) => acc + curr, 0)}  OUT OF 40`,
+      fl[i],
+      fi[i],
+      stringToObject[0].total[i],
     ];
   }
+
+  ///
+
+  ///
+  // -------------------------------------------------------
+
+  ////
+
+  // -------------------------------------------------------
+
+  //  l1 l2 l3 l4
+
+  ///
 
   doc.table(table1, {
     prepareHeader: () =>
@@ -635,262 +717,42 @@ let main = async () => {
 
   doc.addPage();
 
-  ///////////////
-
   doc
     .font("./Oswald/Oswald-Bold.ttf")
     .fontSize(20)
     .fillColor("#0000FF")
-    .text(
-      `PART 2 / 3 : MAT ${database[0].matNo} FINAL CODE IMPLEMENTATION SCORES\n\n`,
-      {
-        align: "center",
-      }
-    );
-  const table2 = {
-    headers: [
-      {
-        label: "COURSE CODE",
-        headerColor: "#0000FF",
-        headerOpacity: "2",
-        align: "center",
-        property: "name",
-        width: 80,
-        renderer: null,
-      },
-
-      {
-        label: "COURSE NAME",
-        headerColor: "#0000FF",
-        align: "left",
-        headerOpacity: "2",
-        property: "price1",
-        width: 250,
-        renderer: null,
-      },
-      {
-        label: "PROBLEM SOLVING / CODE IMPLEMENTATION",
-        property: "price2",
-        headerColor: "#0000FF",
-        align: "center",
-        headerOpacity: "2",
-        width: 240,
-        renderer: null,
-      },
-      {
-        label: "SUCCESSFUL I/O TEST CASES",
-        align: "center",
-        property: "price3",
-        headerColor: "#0000FF",
-        headerOpacity: "2",
-        width: 120,
-        renderer: null,
-      },
-      {
-        label: "CODE EXPLANATION",
-        property: "price3",
-        align: "center",
-        headerColor: "#0000FF",
-        headerOpacity: "2",
-        width: 120,
-        renderer: null,
-      },
-
-      {
-        label: `MAT${database[0].matNo} EXTERNAL CODING LAB TOTAL`,
-        property: "price4",
-        headerColor: "#0000FF",
-        align: "center",
-        headerOpacity: "2",
-
-        width: 130,
-        renderer: (value, indexColumn, indexRow, row) => {
-          return `${value}`;
-        },
-      },
-    ],
-
-    //   // Columns
-
-    rows: [[]],
-  };
-  // Table Generation
-  let addData2 = table2.rows;
-
-  for (let i = 0; i <= database[0].course.length - 1; i++) {
-    p1 = t1Data[i].flat();
-
-    p2 = t2Data[i].flat();
-    p3 = t3Data[i].flat();
-    addData2[i] = [
-      `${stringToObject[0].courseCodes[i]}`,
-      `${stringToObject[0].courseName[i]}`,
-      `${p2.flatMap((str) => str.split(",").map(Number)[0])}`,
-      `${p2.flatMap((str) => str.split(",").map(Number)[1])}`,
-      `${p2.flatMap((str) => str.split(",").map(Number)[2])}`,
-
-      `${t2Data[i]
-        .flatMap((str) => str.split(",").map(Number))
-        .reduce((acc, curr) => acc + curr, 0)} OUT OF 30`,
-    ];
-  }
-
-  doc.table(table2, {
-    prepareHeader: () =>
-      doc
-        .font("./Oswald/Oswald-Medium.ttf")
-        .fillColor("white")
-        .fontSize(12)
-        .opacity(2)
-        .fill(),
-    prepareRow: (indexColumn, rectRow) => {
-      doc
-        .font("./Oswald/Oswald-Regular.ttf")
-        .fontSize(12)
-        .fillColor("black")
-        .opacity(2)
-        .fill();
-      indexColumn === 0 && doc.addBackground(rectRow, "blue", 0.15);
-    },
-  });
-
-  //////
-
-  doc.addPage();
-
-  // ///////////// TABLE 3  ///////////
-
-  doc
-    .font("./Oswald/Oswald-Bold.ttf")
-    .fontSize(20)
-    .fillColor("#0000FF")
-    .text(`PART 3 / 3 : MAT ${database[0].matNo} FINAL INTERVIEW SCORES\n\n`, {
+    .text(`\nMAT-${matNumber} (M${matNumber}) - REAMRKS\n`, {
       align: "center",
     });
 
-  const table3 = {
-    // ROWS
-    headers: [
-      {
-        label: "COURSE CODE",
-        headerColor: "#0000FF",
-        align: "center",
-        headerOpacity: "2",
-        property: "name",
-        width: 80,
-        renderer: null,
-      },
-
-      {
-        label: "COURSE NAME",
-        headerColor: "#0000FF",
-        align: "left",
-        headerOpacity: "2",
-        property: "price1",
-        width: 240,
-        renderer: null,
-      },
-      {
-        label: "PROBLEM SOLVING / CODE IMPLEMENTATION",
-        property: "price2",
-        headerColor: "#0000FF",
-        align: "center",
-        headerOpacity: "2",
-        width: 250,
-        renderer: null,
-      },
-      {
-        label: "SUCCESSFUL I/O TEST CASES",
-        property: "price3",
-        headerColor: "#0000FF",
-        align: "center",
-        headerOpacity: "2",
-        width: 120,
-        renderer: null,
-      },
-      {
-        label: "CODE EXPLANATION",
-        property: "price3",
-        align: "center",
-        width: 100,
-        headerColor: "#0000FF",
-        headerOpacity: "2",
-        renderer: null,
-      },
-
-      {
-        label: `MAT${database[0].matNo} EXTERNAL CODING LAB TOTAL`,
-        property: "price4",
-        align: "center",
-        headerColor: "#0000FF",
-        headerOpacity: "2",
-        width: 130,
-        renderer: (value, indexColumn, indexRow, row) => {
-          return `${value}`;
-        },
-      },
-    ],
-
-    // Columns
-
-    rows: [[]],
-  };
-
-  // Table Generation
-  let addData3 = table3.rows;
-
-  for (let i = 0; i <= database[0].course.length - 1; i++) {
-    p1 = t1Data[i].flat();
-    p2 = t2Data[i].flat();
-    p3 = t3Data[i].flat();
-    addData3[i] = [
-      `${stringToObject[0].courseCodes[i]}`,
-      `${stringToObject[0].courseName[i]}`,
-      `${p3.flatMap((str) => str.split(",").map(Number)[0])}`,
-      `${p3.flatMap((str) => str.split(",").map(Number)[1])}`,
-      `${p3.flatMap((str) => str.split(",").map(Number)[2])}`,
-      `${t3Data[i]
-        .flatMap((str) => str.split(",").map(Number))
-        .reduce((acc, curr) => acc + curr, 0)} OUT OF 30`,
-    ];
-  }
-
-  // Table Generation
-  doc.table(table3, {
-    prepareHeader: () =>
-      doc
-        .font("./Oswald/Oswald-Medium.ttf")
-        .fillColor("white")
-        .fontSize(12)
-        .opacity(2)
-        .fill(),
-    prepareRow: (indexColumn, rectRow) => {
-      doc
-        .font("./Oswald/Oswald-Regular.ttf")
-        .fontSize(12)
-        .fillColor("black")
-        .opacity(2)
-        .fill();
-      indexColumn === 0 && doc.addBackground(rectRow, "blue", 0.15);
-    },
-  });
   doc
-    .font("./Oswald/Oswald-Medium.ttf")
-    .fontSize(14)
-    .fillColor("black")
-    .text(`\n\nREMARKS : `, { align: "left" });
-  for (let i = 0; i <= database[0].remarks.length - 1; i++) {
+    .font("./Oswald/Oswald-Bold.ttf")
+    .fontSize(10)
+    .fillColor("#FFFFFF")
+    .text(`OODF`, {
+      align: "center",
+    });
+
+  for (let i = 0; i <= stringToObject[0].remarks.length - 1; i++) {
     doc
       .font("./Oswald/Oswald-Medium.ttf")
       .fontSize(14)
       .fillColor("black")
-      .text(`${i + 1}.${database[0].remarks[i]}`, { align: "left" });
+      .text(`${i + 1}.${stringToObject[0].remarks[i]}`, { align: "left" });
   }
+
+  doc
+    .font("./Oswald/Oswald-Bold.ttf")
+    .fontSize(10)
+    .fillColor("#FFFFFF")
+    .text(`OODF`, {
+      align: "center",
+    });
 
   doc
     .font("./Oswald/Oswald-Medium.ttf")
     .fontSize(20)
-    .fillColor("black")
+    .fillColor("#0000FF")
     .text(`THE END`, { align: "center" });
 
   doc.end();
